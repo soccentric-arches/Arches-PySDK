@@ -7,7 +7,7 @@
 
 **Status: stub.** A ~15-line auto-generated README template (Description/Setup/Usage headers, all placeholder text), no source files.
 
-A **Python SDK** leaf, intended to consume the `HalService` gRPC endpoint exposed by the matching `-Client`. Placeholder/stub in every project in this workspace (only `Acadia-PySDK` has even a Makefile scaffold).
+A **Python SDK** leaf, intended to consume the `HalService` gRPC endpoint exposed by `Arches-Client`. Currently a placeholder stub with no scaffold yet.
 
 ---
 Part of the `Arches` project in the `project-managers` fleet. See `docs/project-managers.md` for the full 9-project / 8-leaf hierarchy and shared conventions.
