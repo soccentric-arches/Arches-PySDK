@@ -44,10 +44,11 @@ Homepage = "https://siliconcentric.example/arches-sdk"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["arches_sdk*"]
+include = ["arches_sdk*", "acadia_sdk*"]
 
 [tool.setuptools.package-data]
 "arches_sdk" = ["py.typed"]
+"acadia_sdk" = ["py.typed"]
 "arches_sdk._proto" = ["**/*.pyi"]
 
 [tool.ruff]

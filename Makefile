@@ -115,7 +115,7 @@ lint: $(INSTALL_STAMP) ## Run ruff
 
 typecheck: $(INSTALL_STAMP) ## Run mypy --strict
 	$(call banner,Type-checking with mypy --strict)
-	@$(VENV)/bin/python -m mypy --strict $(SDK_DIR)/src/arches_sdk
+	@$(VENV)/bin/python -m mypy --strict --config-file $(SDK_DIR)/pyproject.toml $(SDK_DIR)/src/arches_sdk
 
 build: $(INSTALL_STAMP) ## Build sdist + wheel
 	$(call banner,Building distribution artefacts)
