@@ -1,10 +1,10 @@
-# Acadia-PySDK — top-level orchestration (uv-managed)
+# Arches-PySDK — top-level orchestration (uv-managed)
 #
 # Uses `uv` (https://github.com/astral-sh/uv) for fast, reproducible venvs.
 #
 # Usage:
 #   make            # setup + check (lint + typecheck + test)
-#   make setup      # create uv venv and install acadia-sdk[dev] in editable mode
+#   make setup      # create uv venv and install arches-sdk[dev] in editable mode
 #   make gen        # regenerate proto + dataclass bindings
 #   make gen-check  # fail if committed stubs are stale (regen → diff → revert)
 #   make gen-clean  # wipe generated stubs + full regen
@@ -23,12 +23,12 @@ SHELL        := /bin/bash
 
 UV           ?= uv
 VENV         ?= .venv
-SDK_DIR      := acadia-sdk
+SDK_DIR      := arches-sdk
 STAMP_DIR    := $(VENV)/.stamps
 INSTALL_STAMP := $(STAMP_DIR)/installed
 
 # Generated output directory (must match tools/gen_proto.py OUT_DIR)
-PROTO_OUT    := $(SDK_DIR)/src/acadia_sdk/_proto
+PROTO_OUT    := $(SDK_DIR)/src/arches_sdk/_proto
 
 # ANSI colours
 ifneq (,$(findstring xterm,$(TERM)))
@@ -52,14 +52,14 @@ endef
 all: check
 
 help: ## Show this help
-	@printf "$(C_BOLD)Acadia-PySDK$(C_END) — uv-managed targets\n\n"
+	@printf "$(C_BOLD)Arches-PySDK$(C_END) — uv-managed targets\n\n"
 	@awk 'BEGIN {FS=":.*##"} /^[a-zA-Z_-]+:.*##/ {printf "  $(C_OK)%-14s$(C_END) %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 check: lint typecheck test ## Run lint + typecheck + test
 
 # ── Environment ───────────────────────────────────────────────────────────────
 .PHONY: setup venv install
-setup: $(INSTALL_STAMP) ## Create uv venv + install acadia-sdk[dev] in editable mode
+setup: $(INSTALL_STAMP) ## Create uv venv + install arches-sdk[dev] in editable mode
 
 venv: $(VENV)/bin/python ## Create the virtualenv only
 
@@ -68,7 +68,7 @@ $(VENV)/bin/python:
 	@$(UV) venv $(VENV)
 
 $(INSTALL_STAMP): $(VENV)/bin/python $(SDK_DIR)/pyproject.toml
-	$(call banner,Installing acadia-sdk[dev] in editable mode via uv)
+	$(call banner,Installing arches-sdk[dev] in editable mode via uv)
 	@$(UV) pip install --python $(VENV)/bin/python -e "$(SDK_DIR)[dev]"
 	@mkdir -p $(STAMP_DIR)
 	@touch $(INSTALL_STAMP)
@@ -107,15 +107,15 @@ gen-clean: ## Wipe generated stubs and do a full clean regen
 test: $(INSTALL_STAMP) ## Run pytest with coverage
 	$(call banner,Running test suite)
 	@cd $(SDK_DIR) && ../$(VENV)/bin/python -m pytest tests \
-		--cov=acadia_sdk --cov-report=term-missing -q
+		--cov=arches_sdk --cov-report=term-missing -q
 
 lint: $(INSTALL_STAMP) ## Run ruff
 	$(call banner,Linting with ruff)
-	@$(VENV)/bin/python -m ruff check $(SDK_DIR)/src/acadia_sdk
+	@$(VENV)/bin/python -m ruff check $(SDK_DIR)/src/arches_sdk
 
 typecheck: $(INSTALL_STAMP) ## Run mypy --strict
 	$(call banner,Type-checking with mypy --strict)
-	@$(VENV)/bin/python -m mypy --strict $(SDK_DIR)/src/acadia_sdk
+	@$(VENV)/bin/python -m mypy --strict $(SDK_DIR)/src/arches_sdk
 
 build: $(INSTALL_STAMP) ## Build sdist + wheel
 	$(call banner,Building distribution artefacts)
