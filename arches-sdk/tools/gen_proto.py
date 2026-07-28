@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generate gRPC stubs into ``src/arches_sdk/_proto``.
 
-Reads the canonical proto contracts from ``../Acadia-HAL/protos`` (relative to
+Reads the canonical proto contracts from ``../Arches-HAL/protos`` (relative to
 the repo root containing this SDK), runs ``grpc_tools.protoc``, and post-processes
 the generated files so their imports work as a vendored sub-package.
 
@@ -21,9 +21,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 SDK_ROOT = HERE.parent
 # Arches-PySDK/arches-sdk → Arches-PySDK → Arches (which holds the HAL protos).
-# NOTE: the input path still references ``Acadia-HAL`` for now — repointing it
-# to ``Arches-HAL`` is a separate known bug tracked outside this loop.
-DEFAULT_PROTOS = (SDK_ROOT.parent.parent / "Acadia-HAL" / "protos").resolve()
+DEFAULT_PROTOS = (SDK_ROOT.parent.parent / "Arches-HAL" / "protos").resolve()
 OUT_DIR = SDK_ROOT / "src" / "arches_sdk" / "_proto"
 
 # Proto files we consume (we DO NOT vendor client_service.proto — the SDK
@@ -118,10 +116,17 @@ def main() -> int:
 
     # protoc invocation. Use grpc_tools.protoc programmatically.
     from grpc_tools import protoc  # type: ignore[import-untyped]
+    import grpc_tools  # type: ignore[import-untyped]
+
+    # Well-known protos (google/protobuf/timestamp.proto etc.) ship with
+    # grpc_tools under ``grpc_tools/_proto``; add them as a second include path
+    # so protoc can resolve ``import "google/protobuf/timestamp.proto"``.
+    well_known_include = Path(grpc_tools.__file__).resolve().parent / "_proto"
 
     argv = [
         "protoc",
         f"-I{protos_dir}",
+        f"-I{well_known_include}",
         f"--python_out={out_dir}",
         f"--grpc_python_out={out_dir}",
         f"--mypy_out={out_dir}",

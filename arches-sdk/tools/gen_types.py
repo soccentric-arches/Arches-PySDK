@@ -59,7 +59,7 @@ def _python_type_for_field(fd: Any, current_pkg: str, type_index: dict[str, str]
     """Return a Python type string for a FieldDescriptor."""
     from google.protobuf.descriptor import FieldDescriptor as FD
 
-    label_repeated = fd.label == FD.LABEL_REPEATED
+    label_repeated = fd.is_repeated
     is_map = fd.message_type is not None and fd.message_type.GetOptions().map_entry
 
     if is_map:
@@ -109,7 +109,7 @@ def _python_type_for_field(fd: Any, current_pkg: str, type_index: dict[str, str]
 def _default_for_field(fd: Any, py_type: str) -> str:
     from google.protobuf.descriptor import FieldDescriptor as FD
 
-    label_repeated = fd.label == FD.LABEL_REPEATED
+    label_repeated = fd.is_repeated
     is_map = fd.message_type is not None and fd.message_type.GetOptions().map_entry
     if is_map:
         return "field(default_factory=dict)"
@@ -585,7 +585,7 @@ def _from_proto(cls: type, msg: Any) -> Any:
         if is_map:
             val_fd = fd.message_type.fields_by_name["value"]
             kwargs[py_name] = {k: _convert_scalar(val_fd, v) for k, v in val.items()}
-        elif fd.label == FD.LABEL_REPEATED:
+        elif fd.is_repeated:
             kwargs[py_name] = [_convert_scalar(fd, v) for v in val]
         else:
             kwargs[py_name] = _convert_scalar(fd, val)
@@ -646,7 +646,7 @@ def _to_proto(dc: Any, pb_cls: type) -> Any:
             container = getattr(msg, name)
             for k, v in val.items():
                 _assign_map_entry(container, k, v, val_fd)
-        elif fd.label == FD.LABEL_REPEATED:
+        elif fd.is_repeated:
             container = getattr(msg, name)
             for v in val:
                 _append_repeated(container, v, fd)
