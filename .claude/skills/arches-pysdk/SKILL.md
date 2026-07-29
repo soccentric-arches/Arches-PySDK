@@ -8,11 +8,11 @@ description: "Use when working on the Arches-PySDK repository: Python SDK APIs, 
 ## Repository Context
 
 - This repository is the Python SDK leaf of the Arches project.
-- The distributable package is `arches-sdk`; the primary import package is `arches_sdk`.
-- `acadia_sdk` is a compatibility shim. Preserve it when changing public exports and keep its deprecation behavior intact.
-- The SDK consumes the `HalService` gRPC endpoint exposed by Arches-Client.
-- The supported runtime is Python 3.10 or newer. Dependencies and development tools are declared in `arches-sdk/pyproject.toml`.
-- The top-level `Makefile` is the source of truth for setup, generation, checks, tests, and builds.
+- The distributable package is arches-sdk; the primary import package is arches_sdk.
+- acadia_sdk is a compatibility shim. Preserve it when changing public exports and keep its deprecation behavior intact.
+- The SDK consumes the HalService gRPC endpoint exposed by Arches-Client.
+- The supported runtime is Python 3.10 or newer. Dependencies and development tools are declared in arches-sdk/pyproject.toml.
+- The top-level Makefile is the source of truth for setup, generation, checks, tests, and builds.
 
 ## Working Rules
 
@@ -28,17 +28,17 @@ description: "Use when working on the Arches-PySDK repository: Python SDK APIs, 
 
 Generated protobuf and dataclass bindings are committed under:
 
-- `arches-sdk/src/arches_sdk/_proto/`
-- `arches-sdk/src/arches_sdk/types/`
+- arches-sdk/src/arches_sdk/_proto/
+- arches-sdk/src/arches_sdk/types/
 
 When the source proto definitions change or generated output is stale:
 
-1. Ensure the sibling `../Arches-HAL/protos` checkout is available.
-2. Run `make gen` from the repository root.
+1. Ensure the sibling ../Arches-HAL/protos checkout is available.
+2. Run make gen from the repository root.
 3. Review the generated diff for unexpected changes.
-4. Run `make gen-check` before finishing.
+4. Run make gen-check before finishing.
 
-Do not add generated bindings to `.gitignore`. In type-generation code, use the protobuf descriptor API supported by the installed version, including `FieldDescriptor.is_repeated` for repeated fields.
+Do not add generated bindings to .gitignore. In type-generation code, use the protobuf descriptor API supported by the installed version, including FieldDescriptor.is_repeated for repeated fields.
 
 ## Validation Workflow
 
@@ -53,20 +53,20 @@ make check       # lint + typecheck + test
 make build       # wheel and sdist
 ```
 
-For changes affecting generated bindings, also run `make gen-check`. The repository validator may require the sibling HAL checkout and a prepared `.venv`; treat missing prerequisites as environment blockers, not code failures.
+For changes affecting generated bindings, also run make gen-check. The repository validator may require the sibling HAL checkout and a prepared .venv; treat missing prerequisites as environment blockers, not code failures.
 
 ## Testing Guidance
 
 - Add the narrowest regression test that demonstrates the changed behavior.
-- Reuse the `fake_server` and `address` fixtures in `arches-sdk/tests/conftest.py` for client/RPC behavior.
+- Reuse the fake_server and address fixtures in arches-sdk/tests/conftest.py for client/RPC behavior.
 - Keep tests focused on the public SDK contract; use generated messages only as test-server plumbing.
 - Cover timeout, missing-peripheral, stream, close/idempotency, and compatibility-shim behavior when those paths are affected.
-- Run the focused test first, then the relevant lint/typecheck target, and finish with `make check` when practical.
+- Run the focused test first, then the relevant lint/typecheck target, and finish with make check when practical.
 
 ## Completion Checklist
 
 - Public behavior and compatibility concerns are addressed.
 - Tests cover the changed behavior and pass.
-- `make gen-check` passes when generation-related code changed.
-- `make check` passes, or any blocked command and its missing prerequisite are reported clearly.
+- make gen-check passes when generation-related code changed.
+- make check passes, or any blocked command and its missing prerequisite are reported clearly.
 - Generated output, packaging metadata, docs, and changelog entries are updated only when the change requires them.
