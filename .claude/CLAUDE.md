@@ -1,24 +1,17 @@
 # CLAUDE.md - Arches-PySDK
 
-Remote: git@github.com:SiliconCentric/Arches-PySDK.git
-Parent project: Arches (target hardware: NVIDIA Jetson (Tegra family, L4T/JetPack OS) application processor with an STM32 real-time co-processor.)
-Leaf type: <Project>-PySDK
-Status: REAL - actively built out
+See [project_specs.md](project_specs.md) for what this repo is.
 
-A Python SDK leaf that consumes the HalService gRPC endpoint exposed by Arches-Client. The distribution package is arches-sdk (import name arches_sdk); a acadia_sdk deprecation shim re-exports the public surface for callers still on the old name. Source, tooling, docs, examples, and a uv-managed make workflow (setup/gen/check/build) live under arches-sdk/.
+## Commands
 
-# Commands
+* Setup: `make setup`
+* Generate protos: `make gen`
+* Check (lint + typecheck + test): `make check`
+* Build: `make build`
 
-- Setup: make setup
-- Generate protos: make gen
-- Check (lint + typecheck + test): make check
-- Build: make build
+## Notes
 
-# Notes
-
-- PySDK regenerates protos by design (make gen, with make gen-check failing on stale stubs) - the no-regeneration rule is a C++ ODR constraint and does not apply here. Any change to hal_service.proto breaks it for real.
-
-Part of the Arches project in the project-managers fleet. See docs/project-managers.md for the full 9-project / 8-leaf hierarchy and shared conventions.
+* PySDK regenerates protos by design (`make gen`, with `make gen-check` failing on stale stubs) — the no-regeneration rule is a C++ ODR constraint and does not apply here. Any change to `hal_service.proto` breaks it for real.
 
 <!-- BEGIN loop-engine -->
 ### Loop 20260728-pysdk-package-rename-arches (closed to in-review, try 2 of 2)
