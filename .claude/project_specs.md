@@ -1,12 +1,20 @@
 # Arches-PySDK — specs
 
 Remote: `git@github.com:SiliconCentric/Arches-PySDK.git`
-Parent project: Arches (target hardware: NVIDIA Jetson, Tegra family, L4T/JetPack OS, with an STM32 real-time co-processor)
-Leaf type: `<Project>-PySDK`
-Status: REAL — actively built out
+Stack: Python, uv-managed, src layout.
 
-## What this is
+Consumes the `HalService` gRPC endpoint exposed by Arches-Client — the same wire contract
+Arches-Server speaks.
 
-A Python SDK leaf that consumes the `HalService` gRPC endpoint exposed by Arches-Client. The distribution package is `arches-sdk` (import name `arches_sdk`); a `acadia_sdk` deprecation shim re-exports the public surface for callers still on the old name. Source, tooling, docs, examples, and a uv-managed make workflow (setup/gen/check/build) live under `arches-sdk/`.
+## Layout
 
-Part of the Arches project in the project-managers fleet. See `docs/project-managers.md` for the full 9-project / 8-leaf hierarchy and shared conventions.
+* `arches-sdk/` — everything: source, tooling, docs, examples, the make workflow (setup / gen / check / build).
+* `arches-sdk/src/arches_sdk/` — the package. Import name `arches_sdk`, distribution name `arches-sdk`.
+* `arches-sdk/src/arches_sdk/_proto/` and `types/` — generated stubs, ~270 files, **committed on purpose**.
+* `acadia_sdk` — deprecation shim re-exporting the public surface for callers on the old name. Lazy PEP 562 `__getattr__`, emits a `DeprecationWarning`, ships in the wheel.
+
+## The regeneration exception
+
+This is the one leaf that regenerates protos. Arches-Client and Arches-Server must not, because a
+second copy of the generated C++ symbols causes ODR/duplicate-symbol link errors. That is a C++
+constraint with no Python equivalent, so it does not apply here.

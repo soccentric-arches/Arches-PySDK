@@ -1,17 +1,32 @@
-# CLAUDE.md - Arches-PySDK
+# Arches-PySDK
 
-See [project_specs.md](project_specs.md) for what this repo is.
+Python SDK consuming the `HalService` gRPC endpoint Arches-Client exposes. Distribution
+`arches-sdk`, import name `arches_sdk`.
 
-## Commands
+## How you work here
 
-* Setup: `make setup`
-* Generate protos: `make gen`
-* Check (lint + typecheck + test): `make check`
-* Build: `make build`
+* Commands: `.claude/commands/` — check, gen, validate.
+* Write: source, tooling, docs, examples and the uv-managed make workflow all live under `arches-sdk/`.
+* Test: `make check` is lint + typecheck + test together.
+* Regenerate protos with `make gen`; `make gen-check` fails on stale stubs.
 
-## Notes
+## How you validate
 
-* PySDK regenerates protos by design (`make gen`, with `make gen-check` failing on stale stubs) — the no-regeneration rule is a C++ ODR constraint and does not apply here. Any change to `hal_service.proto` breaks it for real.
+* Gate: `./.claude/validate.sh quick` (seconds) or `full` (adds build + tests). Run it before you claim done.
+* Exit codes: `0` pass, `1`-`76` fail, `77` a check never ran. **77 is not a pass.**
+* The gate and everything under `.claude/lib`, `hooks`, `commands`, `settings.json` is human-owned. Run it, never edit it.
+
+## Do
+
+* Regenerate protos here — that is by design, and the one place in the fleet where it is. Any change to `hal_service.proto` breaks this repo for real.
+* Keep the `acadia_sdk` deprecation shim shipping in the wheel. It lazily re-exports `arches_sdk` for callers still on the old name.
+
+## Don't
+
+* **Don't apply the no-regeneration rule here.** It is a C++ ODR constraint that protects Arches-Client and Arches-Server from duplicate proto symbols. Python has no equivalent.
+* **Don't gitignore the generated stubs.** They are committed on purpose and `make gen-check` depends on them.
+
+*Loop-derived lessons for this repo live in the fence below, pending curation into the lists above.*
 
 <!-- BEGIN loop-engine -->
 ### Loop 20260728-pysdk-package-rename-arches (closed to in-review, try 2 of 2)
