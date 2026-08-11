@@ -76,7 +76,7 @@ $(INSTALL_STAMP): $(VENV)/bin/python $(SDK_DIR)/pyproject.toml
 # ── Proto generation ──────────────────────────────────────────────────────────
 .PHONY: gen gen-check gen-clean
 
-gen: $(INSTALL_STAMP) ## Regenerate proto + dataclass bindings from Acadia-HAL/protos
+gen: $(INSTALL_STAMP) ## Regenerate proto + dataclass bindings from Arches-HAL/protos
 	$(call banner,Regenerating proto bindings)
 	@$(VENV)/bin/python $(SDK_DIR)/tools/gen_proto.py
 	$(call banner,Regenerating dataclass bindings)
