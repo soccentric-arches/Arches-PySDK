@@ -1,6 +1,6 @@
 # Arches-PySDK — specs
 
-Remote: `git@github.com:SiliconCentric/Arches-PySDK.git`
+Remote: `git@github.com:soccentric-arches/Arches-PySDK.git`
 Stack: Python, uv-managed, src layout.
 
 Consumes the `HalService` gRPC endpoint exposed by Arches-Client — the same wire contract
